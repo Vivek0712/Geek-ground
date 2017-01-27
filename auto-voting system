@@ -1,1 +1,300 @@
 
+
+#include<iostream.h>
+#include<conio.h>
+#include<fstream.h>
+#include<process.h>
+#include<stdio.h>
+#include<dos.h>
+#include<string.h>
+int a,b,c;
+char elec_pass[20];
+class candidate
+{
+char cname[20];
+char cparty[20];
+int cpin;
+int votes;
+public:
+
+void input()
+{
+cout<<"\n\n ENTER THE CANDIDATE NAME"<<endl;
+gets(cname);
+cout<<"\n\n ENTER THE PARTY "<<endl;
+gets(cparty);
+cout<<"\n\n ENTER THE CANDIDATE ID"<<endl;
+cin>>cpin;
+votes=0;
+
+}
+void result()
+  {
+   cout<<"\n"<<cname<<"\t"<<cparty<<"\t"<<cpin<<"\t"<<votes;
+  getch();
+  exit(0);
+  }
+
+void output()
+{
+cout<<"\n"<<cname<<"\t"<<cparty<<"\t"<<cpin<<"\n";
+}
+};
+
+char x='y',z='y';
+void candidate_admin();
+void voter_admin();
+void mainmenu();
+void voting_res();
+void mainmenu1();
+
+void main()
+{
+
+clrscr();
+cout<<" \n\n\n\n\n \t\t\tCOMPUTERISED VOTING SYSTEM ";
+cout<<"\n\n\n\n\n\t\t\t\t\t BY \n\n\t\t\t VIVEK RAJA PS ";
+delay(3000);
+
+mainmenu();
+clrscr();
+
+}
+void mainmenu()
+{
+ strcpy(elec_pass,"null");
+ clrscr();
+ cout<<"\n\n\n           COMPUTERISED VOTING SYSTEM        ";
+ cout<<"\n\n ENTER THE ELECTION COMMISSION PASSWORD TO START VOTING \n\n";
+ gets(elec_pass);
+ if(strcmp(elec_pass,"A")==0)
+  {
+      mainmenu1();
+   }
+ else
+{
+clrscr();
+cout<<"\n WRONG PASSWORD \n";
+ delay(1000);
+ exit(0);
+ }
+}
+void mainmenu1()
+{
+  clrscr();
+  cout<<"\n \n AUTHORISED OPTIONS "<<endl;
+  cout<<"\n 1. VIEW OR MODIFY CANDIDATE LIST "<<endl;
+  cout<<"\n 2. VIEW OR MODIFY VOTER LIST "<<endl;
+  cout<<"\n 3. VIEW RESULT "<<endl;
+  cout<<"\n 4. EXIT "<<endl;
+  cout<<"\n ENTER OPTION "<<endl;
+  cin>>c;
+  if(c==1)
+   candidate_admin();
+  else if(c==2)
+  voter_admin();
+  else if(c==4)
+  exit(0);
+  else if(c==3)
+  {
+   voting_res();
+  }
+  else
+  cout<<"\n\n INVALID OPTION "<<endl;
+}
+void voting_res()
+{
+ candidate c;
+ ifstream can_list;
+ can_list.open("can_list.txt",ios::in|ios::binary);
+
+ while(!can_list.eof())
+  {
+  can_list.read((char*)&c,sizeof(c));
+  c.result();
+
+
+  }
+  can_list.close();
+getch();
+}
+
+
+void candidate_admin()
+{ clrscr();
+cout<<"\n \n CHOOSE THE ACTION YOU WANT TO DO "<<endl;
+cout<<"\n1.VIEW CANDIDATE LIST."<<endl;
+cout<<"\n2.ADD CANDIDATE TO LIST"<<endl;
+cout<<"\n3.RESET CANDIDATE LIST."<<endl;
+cout<<"\n4.EXIT TO MAIN MENU  "<<endl;
+cin>>a;
+switch(a)
+{
+case 1 :
+{
+candidate c;
+clrscr();
+ifstream can_list;
+can_list.open("can_list.txt",ios::in);
+if(!can_list)
+{
+cout<<"\n\n\ LIST IS NOT INITIALISED"<<endl;
+getch();
+candidate_admin();
+}
+cout<<"\n";
+while(can_list.read((char*)&c,sizeof(c)))
+{
+c.output();
+}
+can_list.close();
+getch();
+candidate_admin();
+break;
+}
+
+case 2 :
+{
+if(x=='n'|| x=='N')
+{
+clrscr() ;
+cout<<"LIST ONCE INITIALISED CANNOT BE ALTERED \n";
+cout<<" RESET LIST TO INITIALISE THE LIST ONE AGAIN \n\n";
+getch();
+}
+while(x=='y'|| x=='Y')
+{
+clrscr();
+cout<<"\n\n"<<endl;
+ofstream can_list;
+clrscr();
+can_list.open("can_list.txt",ios::out|ios::app| ios::binary);
+candidate c;
+can_list.seekp(0,ios::end);
+c.input();
+can_list.write((char*)&c , sizeof(c));
+clrscr();
+cout<<"\n\nDO YOU WANT TO MAKE ANOTHER ENTRY ?(y/n)"<<endl;
+cin>>x;
+}
+
+
+candidate_admin();
+break;
+}
+
+case 3:
+{
+clrscr();
+remove("can_list.txt");
+cout<<"\n\n LIST HAS BEEN RESET ";
+x='y';
+delay(1000);
+candidate_admin();
+break;
+}
+case 4:
+mainmenu1();
+default:
+{
+clrscr();
+cout<<"ENTER VALID OPTION"<<endl;
+getch();
+candidate_admin();
+}
+}
+}
+
+
+
+
+void voter_admin()
+{ clrscr();
+cout<<"\n \n CHOOSE THE ACTION YOU WANT TO DO "<<endl;
+cout<<"\n1.VIEW VOTERS' LIST."<<endl;
+cout<<"\n2.ADD VOTER TO LIST"<<endl;
+cout<<"\n3.RESET VOTERS'LIST."<<endl;
+cout<<"\n4.EXIT "<<endl;
+cin>>b;
+switch(b)
+{
+case 1 :
+{
+char ch;
+clrscr();
+ifstream voter_list;
+voter_list.open("voter_list.txt",ios::in);
+if(!voter_list)
+{
+cout<<"\n\n\ LIST IS NOT INITIALISED"<<endl;
+getch();
+voter_admin();
+}
+cout<<"\n\n";
+while(voter_list)
+{
+voter_list.get(ch);
+cout<<ch;
+}
+voter_list.close();
+getch();
+voter_admin();
+
+
+
+break;
+}
+
+case 2 :
+{
+x='Y';
+while(x=='y'|| x=='Y')
+{
+clrscr();
+cout<<"\n\n"<<endl;
+ofstream voter_list;
+ofstream voterid;
+clrscr();
+voter_list.open("voter_list.txt",ios::out|ios::app);
+voterid.open("voterid.txt" , ios::out|ios::in|ios::app);
+int no;
+char name[20],party[20];
+cout<<"\n\nENTER PIN "<<endl;
+cin>>no;
+cout<<"\n\nENTER NAME "<<endl;
+gets(name);
+voter_list<<no<<"\t"<<name<<"\n";
+voterid<<no<<"\n";
+voter_list.close();
+voterid.close();
+clrscr();
+cout<<"\n\nDO YOU WANT TO MAKE ANOTHER ENTRY ?(y/n)"<<endl;
+cin>>x;
+}
+voter_admin();
+break;
+}
+
+case 3:
+{
+clrscr();
+remove("voter_list.txt");
+remove("voterid.txt");
+remove("voter_check.txt");
+cout<<"\n\n LIST HAS BEEN RESET ";
+delay(1000);
+voter_admin();
+break;
+}
+case 4:
+mainmenu1();
+default:
+{
+clrscr();
+cout<<"ENTER THE VALID OPTION"<<endl;
+getch();
+voter_admin();
+}
+}
+}
+
